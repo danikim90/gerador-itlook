@@ -34,15 +34,15 @@ const PIECE_TYPES = [
 ];
 
 const SIZE_GUIDES = {
-  top: `38 (P) – Busto 90-94 | Cintura 70-74
-40 (M) – Busto 94-98 | Cintura 74-78
-42 (G) – Busto 98-102 | Cintura 78-82`,
-  bottom: `38 (P) – Cintura 70-74 | Quadril 99-103
-40 (M) – Cintura 74-78 | Quadril 103-107
-42 (G) – Cintura 78-82 | Quadril 107-111`,
-  full: `38 (P) – Busto 90-94 | Cintura 70-74 | Quadril 99-103
-40 (M) – Busto 94-98 | Cintura 74-78 | Quadril 103-107
-42 (G) – Busto 98-102 | Cintura 78-82 | Quadril 107-111`,
+  top: `38 (P) – Busto 90-94 | Cintura 74-78
+40 (M) – Busto 94-98 | Cintura 78-82
+42 (G) – Busto 98-102 | Cintura 82-86`,
+  bottom: `38 (P) – Cintura 74-78 | Quadril 99-103
+40 (M) – Cintura 78-82 | Quadril 103-107
+42 (G) – Cintura 82-86 | Quadril 107-111`,
+  full: `38 (P) – Busto 90-94 | Cintura 74-78 | Quadril 99-103
+40 (M) – Busto 94-98 | Cintura 78-82 | Quadril 103-107
+42 (G) – Busto 98-102 | Cintura 82-86 | Quadril 107-111`,
 };
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
