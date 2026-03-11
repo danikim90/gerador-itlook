@@ -34,7 +34,29 @@ const PIECE_TYPES = [
 ];
 
 // Tabela de medidas fixa — mesmas para todos os produtos
-const SIZE_GUIDE_HTML = `<table style="border-collapse:collapse;width:100%;font-family:'Montserrat',sans-serif;font-size:12px;"><thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Tamanho</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Busto</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Cintura</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Quadril</th></tr></thead><tbody><tr><td style="border:1px solid #ccc;padding:5px 8px;">36 (PP)</td><td style="border:1px solid #ccc;padding:5px 8px;">86 – 90</td><td style="border:1px solid #ccc;padding:5px 8px;">70 – 74</td><td style="border:1px solid #ccc;padding:5px 8px;">95 – 99</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">38 (P)</td><td style="border:1px solid #ccc;padding:5px 8px;">90 – 94</td><td style="border:1px solid #ccc;padding:5px 8px;">74 – 78</td><td style="border:1px solid #ccc;padding:5px 8px;">99 – 103</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">40 (M)</td><td style="border:1px solid #ccc;padding:5px 8px;">94 – 98</td><td style="border:1px solid #ccc;padding:5px 8px;">78 – 82</td><td style="border:1px solid #ccc;padding:5px 8px;">103 – 107</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">42 (G)</td><td style="border:1px solid #ccc;padding:5px 8px;">98 – 102</td><td style="border:1px solid #ccc;padding:5px 8px;">82 – 84</td><td style="border:1px solid #ccc;padding:5px 8px;">107 – 111</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">44 (GG)</td><td style="border:1px solid #ccc;padding:5px 8px;">102 – 106</td><td style="border:1px solid #ccc;padding:5px 8px;">84 – 88</td><td style="border:1px solid #ccc;padding:5px 8px;">111 – 115</td></tr></tbody></table>`;
+const SIZE_GUIDE_HTML = `
+<style>
+.itlook-medidas{border-collapse:collapse;width:100%;max-width:480px;font-family:'Montserrat',sans-serif;font-size:12px;}
+.itlook-medidas th,.itlook-medidas td{border:1px solid #ccc;padding:5px 10px;text-align:left;}
+.itlook-medidas thead tr{background:#f5f5f5;}
+@media(max-width:480px){
+  .itlook-medidas thead{display:none;}
+  .itlook-medidas tr{display:block;margin-bottom:8px;border:1px solid #ddd;border-radius:4px;}
+  .itlook-medidas td{display:block;border:none;border-bottom:1px solid #eee;padding:4px 10px;}
+  .itlook-medidas td:last-child{border-bottom:none;}
+  .itlook-medidas td::before{content:attr(data-label);font-weight:600;margin-right:6px;}
+}
+</style>
+<table class="itlook-medidas">
+<thead><tr><th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th></tr></thead>
+<tbody>
+<tr><td data-label="Tamanho">36 (PP)</td><td data-label="Busto">86 – 90</td><td data-label="Cintura">70 – 74</td><td data-label="Quadril">95 – 99</td></tr>
+<tr><td data-label="Tamanho">38 (P)</td><td data-label="Busto">90 – 94</td><td data-label="Cintura">74 – 78</td><td data-label="Quadril">99 – 103</td></tr>
+<tr><td data-label="Tamanho">40 (M)</td><td data-label="Busto">94 – 98</td><td data-label="Cintura">78 – 82</td><td data-label="Quadril">103 – 107</td></tr>
+<tr><td data-label="Tamanho">42 (G)</td><td data-label="Busto">98 – 102</td><td data-label="Cintura">82 – 84</td><td data-label="Quadril">107 – 111</td></tr>
+<tr><td data-label="Tamanho">44 (GG)</td><td data-label="Busto">102 – 106</td><td data-label="Cintura">84 – 88</td><td data-label="Quadril">111 – 115</td></tr>
+</tbody>
+</table>`;
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
 A marca veste uma mulher madura (45-55 anos), segura do próprio corpo. Ela sai à noite — jantar, bar, cinema, aniversário. Gosta de marcar a silhueta sem ser vulgar. Valoriza clavícula à mostra, decote na medida.
