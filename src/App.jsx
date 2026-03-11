@@ -289,7 +289,7 @@ export default function GeradorDescricao() {
     return (
       <div style={{ marginBottom: 14 }}>
         <div style={{
-          fontFamily: "'Montserrat', sans-serif", fontSize: 10,
+          fontSize: 10,
           letterSpacing: 1.2, textTransform: "uppercase",
           color: "#A8A3A0", marginBottom: 4,
         }}>{label}</div>
@@ -299,7 +299,6 @@ export default function GeradorDescricao() {
               style={{
                 width: "100%", minHeight: 80, padding: 12,
                 border: "1px solid #2C2825", borderRadius: 3,
-                fontFamily: "'Montserrat', sans-serif", fontSize: 12,
                 lineHeight: 1.7, color: "#2C2825", resize: "vertical",
                 outline: "none", background: "#FFFEF9",
               }}
@@ -321,8 +320,7 @@ export default function GeradorDescricao() {
             onClick={() => setEditingField(fieldKey)}
             style={{
               padding: "10px 14px", background: "#FAFAF8", borderRadius: 3,
-              cursor: "pointer", fontSize: 12, fontFamily: "'Montserrat', sans-serif",
-              lineHeight: 1.7, color: "#2C2825", border: "1px solid transparent",
+              cursor: "pointer", lineHeight: 1.7, color: "#2C2825", border: "1px solid transparent",
               transition: "border-color 0.2s",
             }}
             onMouseEnter={e => e.currentTarget.style.borderColor = "#E0DCD8"}
@@ -345,32 +343,35 @@ export default function GeradorDescricao() {
       fontFamily: "'Montserrat', sans-serif",
     }}>
       <style>{`
-        html, body { font-family: 'Montserrat', sans-serif; }
-        * { box-sizing: border-box; font-family: inherit; }
-        .tool-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 5px; display: block; }
-        .tool-input { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
+        html, body { font-family: 'Montserrat', sans-serif; font-size: 12px; }
+        * { box-sizing: border-box; font-family: inherit; font-size: inherit; }
+        .tool-label { font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 5px; display: block; }
+        .tool-input { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
         .tool-input:focus { border-color: #2C2825; }
         .tool-input::placeholder { color: #C4BFB9; }
-        .tool-select { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        .tool-select { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .tool-select:focus { border-color: #2C2825; }
-        .btn-main { width: 100%; padding: 11px; background: #2C2825; color: white; border: none; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .btn-main { width: 100%; padding: 11px; background: #2C2825; color: white; border: none; border-radius: 3px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
         .btn-main:hover { background: #1a1715; }
         .btn-main:disabled { background: #C4BFB9; cursor: not-allowed; }
         .loading-dots::after { content: ''; animation: dots 1.5s steps(4) infinite; }
         @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .drop-zone { border: 2px dashed #D5D0CB; border-radius: 4px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
+        .drop-zone { border: 2px dashed #D5D0CB; border-radius: 4px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
         .drop-zone:hover, .drop-zone.active { border-color: #2C2825; background: #F5F4F2; }
-        .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .pill { padding: 5px 13px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 11px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
+        .pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+        .pill { padding: 5px 12px; border: 1px solid #E0DCD8; border-radius: 20px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
         .pill:hover { border-color: #2C2825; color: #2C2825; }
         .pill.active { background: #2C2825; border-color: #2C2825; color: white; }
-        .size-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .size-table { border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; font-size: 11px; white-space: nowrap; }
-        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 4px 8px; text-align: left; }
+        .main-grid { display: grid; gap: 28px; }
+        .size-table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 4px 6px; text-align: left; word-break: break-word; }
         .size-table thead tr { background: #F5F4F2; }
         .size-table td { color: #2C2825; }
-        .size-table th { color: #8A8580; font-weight: 500; letter-spacing: 0.5px; }
+        .size-table th { color: #8A8580; font-weight: 500; font-size: 10px; letter-spacing: 0.4px; }
+        @media (max-width: 640px) {
+          .main-grid { grid-template-columns: 1fr !important; max-width: 460px !important; }
+        }
       `}</style>
 
       <div style={{ borderBottom: "1px solid #E0DCD8", padding: "20px 0", textAlign: "center", background: "white" }}>
@@ -378,10 +379,9 @@ export default function GeradorDescricao() {
         <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 17, fontWeight: 300, color: "#2C2825", margin: 0 }}>Descrição de Produto</h1>
       </div>
 
-      <div style={{
-        maxWidth: hasResult ? 880 : 460, margin: "0 auto", padding: "32px 20px",
-        display: "grid", gridTemplateColumns: hasResult ? "1fr 1fr" : "1fr",
-        gap: 32, transition: "max-width 0.3s",
+      <div className="main-grid" style={{
+        maxWidth: hasResult ? 880 : 460, margin: "0 auto", padding: "24px 16px",
+        gridTemplateColumns: hasResult ? "1fr 1fr" : "1fr",
       }}>
         <div>
           <div style={{ marginBottom: 18 }}>
@@ -399,7 +399,7 @@ export default function GeradorDescricao() {
                 onDragLeave={() => setDragActive(false)}
                 onDrop={onDrop}>
                 <div style={{ fontSize: 28, marginBottom: 6, color: "#C4BFB9" }}>📷</div>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, color: "#8A8580" }}>
+                <div style={{ color: "#8A8580" }}>
                   <span style={{ color: "#2C2825", fontWeight: 500 }}>Ctrl+V</span> para colar print
                   <span style={{ margin: "0 6px", color: "#D5D0CB" }}>|</span>
                   <span style={{ textDecoration: "underline", color: "#2C2825", cursor: "pointer" }}>buscar arquivo</span>
@@ -482,7 +482,7 @@ export default function GeradorDescricao() {
               : hasResult ? "Regerar" : "Gerar descrição"}
           </button>
           {!imageData && !getFabric() && (
-            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#A8A3A0", textAlign: "center", marginTop: 8 }}>
+            <p style={{ fontSize: 10, color: "#A8A3A0", textAlign: "center", marginTop: 8 }}>
               Envie uma foto ou selecione o tecido</p>
           )}
         </div>
@@ -492,7 +492,7 @@ export default function GeradorDescricao() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <label className="tool-label" style={{ margin: 0 }}>Resultado</label>
               <button onClick={resetAll}
-                style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#A8A3A0", textDecoration: "underline" }}>
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#A8A3A0", textDecoration: "underline" }}>
                 Limpar tudo</button>
             </div>
 
@@ -504,71 +504,59 @@ export default function GeradorDescricao() {
                 onChange={setTechnicalText} fieldKey="technical" />
 
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
-                  Composição
-                </div>
-                <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, fontSize: 12, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Composição</div>
+                <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, lineHeight: 1.7, color: "#2C2825" }}>
                   <strong>Composição:</strong><br />{compositionText}
                 </div>
               </div>
 
               {showLiningComposition && getLiningComposition() && (
                 <div style={{ marginBottom: 14 }}>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
-                    Forro
-                  </div>
-                  <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, fontSize: 12, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                  <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Forro</div>
+                  <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, lineHeight: 1.7, color: "#2C2825" }}>
                     <strong>Forro:</strong><br />{capitalizeMaterial(getLiningComposition())}
                   </div>
                 </div>
               )}
 
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
-                  Guia de Medidas
-                </div>
-                <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3 }}>
-                  <div className="size-table-wrap">
-                    <table className="size-table">
-                      <thead>
-                        <tr>
-                          <th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td>36 (PP)</td><td>86 – 90</td><td>70 – 74</td><td>95 – 99</td></tr>
-                        <tr><td>38 (P)</td><td>90 – 94</td><td>74 – 78</td><td>99 – 103</td></tr>
-                        <tr><td>40 (M)</td><td>94 – 98</td><td>78 – 82</td><td>103 – 107</td></tr>
-                        <tr><td>42 (G)</td><td>98 – 102</td><td>82 – 84</td><td>107 – 111</td></tr>
-                        <tr><td>44 (GG)</td><td>102 – 106</td><td>84 – 88</td><td>111 – 115</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
+                <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
+                <div style={{ padding: "8px 10px", background: "#FAFAF8", borderRadius: 3 }}>
+                  <table className="size-table">
+                    <thead>
+                      <tr><th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>36 (PP)</td><td>86–90</td><td>70–74</td><td>95–99</td></tr>
+                      <tr><td>38 (P)</td><td>90–94</td><td>74–78</td><td>99–103</td></tr>
+                      <tr><td>40 (M)</td><td>94–98</td><td>78–82</td><td>103–107</td></tr>
+                      <tr><td>42 (G)</td><td>98–102</td><td>82–84</td><td>107–111</td></tr>
+                      <tr><td>44 (GG)</td><td>102–106</td><td>84–88</td><td>111–115</td></tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
               <div style={{ marginBottom: 4 }}>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
-                  Tamanho do modelo
-                </div>
+                <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Tamanho do modelo</div>
                 {editingModelSize ? (
                   <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
                     <input
-                      style={{ padding: "6px 10px", border: "1px solid #2C2825", borderRadius: 3, fontFamily: "'Montserrat', sans-serif", fontSize: 13, color: "#2C2825", width: 80, outline: "none" }}
+                      style={{ padding: "6px 10px", border: "1px solid #2C2825", borderRadius: 3, color: "#2C2825", width: 80, outline: "none" }}
                       value={modelSize}
                       onChange={e => setModelSize(e.target.value)}
                       autoFocus
                       onKeyDown={e => { if (e.key === "Enter") setEditingModelSize(false); }}
                     />
                     <button onClick={() => setEditingModelSize(false)}
-                      style={{ padding: "6px 12px", background: "#2C2825", color: "white", border: "none", borderRadius: 3, fontFamily: "'Montserrat', sans-serif", fontSize: 11, cursor: "pointer" }}>
+                      style={{ padding: "6px 12px", background: "#2C2825", color: "white", border: "none", borderRadius: 3, cursor: "pointer" }}>
                       OK
                     </button>
                   </div>
                 ) : (
                   <div
                     onClick={() => setEditingModelSize(true)}
-                    style={{ padding: "8px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 13, fontFamily: "'Montserrat', sans-serif", color: "#8A8580", fontStyle: "italic", cursor: "pointer", border: "1px solid transparent", transition: "border-color 0.2s", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                    style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, color: "#8A8580", fontStyle: "italic", cursor: "pointer", border: "1px solid transparent", transition: "border-color 0.2s", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                     onMouseEnter={e => e.currentTarget.style.borderColor = "#E0DCD8"}
                     onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
                   >
@@ -583,7 +571,7 @@ export default function GeradorDescricao() {
               style={{ marginTop: 16, background: copied ? "#3D6B4F" : "#2C2825" }}>
               {copied ? "✓ Copiado!" : "Copiar descrição"}
             </button>
-            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, color: "#B0ABA6", textAlign: "center", marginTop: 6 }}>
+            <p style={{ fontSize: 10, color: "#B0ABA6", textAlign: "center", marginTop: 6 }}>
               Cola na Nuvemshop com negrito, itálico e quebras de linha
             </p>
           </div>
