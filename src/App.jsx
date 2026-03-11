@@ -93,6 +93,13 @@ export default function GeradorDescricao() {
 
   const [modelSize, setModelSize] = useState("P");
   const [editingModelSize, setEditingModelSize] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 640);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -211,37 +218,23 @@ export default function GeradorDescricao() {
     setLoading(false);
   };
 
+  const p = (content) => `<p style="margin:0 0 8px 0">${content}</p>`;
+
   const copyToClipboard = () => {
     const parts = [];
 
-    if (emotionalText) {
-      parts.push(`<p>${emotionalText}</p>`);
-    }
-
-    parts.push('<p><br></p>');
-
-    if (technicalText) {
-      parts.push(`<p>${technicalText}</p>`);
-    }
-
-    parts.push('<p><br></p>');
-
-    if (compositionText) {
-      parts.push(`<p><strong>Composição:</strong><br>${compositionText}</p>`);
-    }
+    if (emotionalText) parts.push(p(emotionalText));
+    if (technicalText) parts.push(p(technicalText));
+    if (compositionText) parts.push(p(`<strong>Composição:</strong> ${compositionText}`));
 
     const liningComp = getLiningComposition();
     if (lining === "Com forro" && liningComp) {
-      parts.push(`<p><strong>Forro:</strong><br>${capitalizeMaterial(liningComp)}</p>`);
+      parts.push(p(`<strong>Forro:</strong> ${capitalizeMaterial(liningComp)}`));
     }
 
-    parts.push('<p><br></p>');
-
-    parts.push(`<p><strong>Guia de Medidas</strong> (medidas do corpo em cm):</p>${SIZE_GUIDE_HTML}`);
-
-    parts.push('<p><br></p>');
-
-    parts.push(`<p><em>Modelo veste ${modelSize}</em></p>`);
+    parts.push(p(`<strong>Guia de Medidas</strong> (medidas do corpo em cm):`));
+    parts.push(SIZE_GUIDE_HTML);
+    parts.push(p(`<em>Modelo veste ${modelSize}</em>`));
 
     const htmlContent = parts.join('');
 
@@ -369,9 +362,6 @@ export default function GeradorDescricao() {
         .size-table thead tr { background: #F5F4F2; }
         .size-table td { color: #2C2825; }
         .size-table th { color: #8A8580; font-weight: 500; font-size: 10px; letter-spacing: 0.4px; }
-        @media (max-width: 640px) {
-          .main-grid { grid-template-columns: 1fr !important; max-width: 460px !important; }
-        }
       `}</style>
 
       <div style={{ borderBottom: "1px solid #E0DCD8", padding: "20px 0", textAlign: "center", background: "white" }}>
@@ -380,8 +370,8 @@ export default function GeradorDescricao() {
       </div>
 
       <div className="main-grid" style={{
-        maxWidth: hasResult ? 880 : 460, margin: "0 auto", padding: "24px 16px",
-        gridTemplateColumns: hasResult ? "1fr 1fr" : "1fr",
+        maxWidth: (hasResult && !isMobile) ? 880 : 460, margin: "0 auto", padding: "24px 16px",
+        gridTemplateColumns: (hasResult && !isMobile) ? "1fr 1fr" : "1fr",
       }}>
         <div>
           <div style={{ marginBottom: 18 }}>
@@ -523,8 +513,14 @@ export default function GeradorDescricao() {
                 <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
                 <div style={{ padding: "8px 10px", background: "#FAFAF8", borderRadius: 3 }}>
                   <table className="size-table">
+                    <colgroup>
+                      <col style={{ width: "30%" }} />
+                      <col style={{ width: "23%" }} />
+                      <col style={{ width: "23%" }} />
+                      <col style={{ width: "24%" }} />
+                    </colgroup>
                     <thead>
-                      <tr><th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th></tr>
+                      <tr><th>Tam.</th><th>Busto</th><th>Cin.</th><th>Quadril</th></tr>
                     </thead>
                     <tbody>
                       <tr><td>36 (PP)</td><td>86–90</td><td>70–74</td><td>95–99</td></tr>
