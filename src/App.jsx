@@ -34,7 +34,7 @@ const PIECE_TYPES = [
 ];
 
 // Tabela de medidas fixa — mesmas para todos os produtos
-const SIZE_GUIDE_HTML = `<table style="border-collapse:collapse;width:100%;font-family:'Montserrat',sans-serif;font-size:13px;"><thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Tamanho</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Busto</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Cintura</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Quadril</th></tr></thead><tbody><tr><td style="border:1px solid #ccc;padding:8px 12px;">36 (PP)</td><td style="border:1px solid #ccc;padding:8px 12px;">86 – 90</td><td style="border:1px solid #ccc;padding:8px 12px;">70 – 74</td><td style="border:1px solid #ccc;padding:8px 12px;">95 – 99</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">38 (P)</td><td style="border:1px solid #ccc;padding:8px 12px;">90 – 94</td><td style="border:1px solid #ccc;padding:8px 12px;">74 – 78</td><td style="border:1px solid #ccc;padding:8px 12px;">99 – 103</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">40 (M)</td><td style="border:1px solid #ccc;padding:8px 12px;">94 – 98</td><td style="border:1px solid #ccc;padding:8px 12px;">78 – 82</td><td style="border:1px solid #ccc;padding:8px 12px;">103 – 107</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">42 (G)</td><td style="border:1px solid #ccc;padding:8px 12px;">98 – 102</td><td style="border:1px solid #ccc;padding:8px 12px;">82 – 84</td><td style="border:1px solid #ccc;padding:8px 12px;">107 – 111</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">44 (GG)</td><td style="border:1px solid #ccc;padding:8px 12px;">102 – 106</td><td style="border:1px solid #ccc;padding:8px 12px;">84 – 88</td><td style="border:1px solid #ccc;padding:8px 12px;">111 – 115</td></tr></tbody></table>`;
+const SIZE_GUIDE_HTML = `<table style="border-collapse:collapse;width:100%;font-family:'Montserrat',sans-serif;font-size:12px;"><thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Tamanho</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Busto</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Cintura</th><th style="border:1px solid #ccc;padding:5px 8px;text-align:left;">Quadril</th></tr></thead><tbody><tr><td style="border:1px solid #ccc;padding:5px 8px;">36 (PP)</td><td style="border:1px solid #ccc;padding:5px 8px;">86 – 90</td><td style="border:1px solid #ccc;padding:5px 8px;">70 – 74</td><td style="border:1px solid #ccc;padding:5px 8px;">95 – 99</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">38 (P)</td><td style="border:1px solid #ccc;padding:5px 8px;">90 – 94</td><td style="border:1px solid #ccc;padding:5px 8px;">74 – 78</td><td style="border:1px solid #ccc;padding:5px 8px;">99 – 103</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">40 (M)</td><td style="border:1px solid #ccc;padding:5px 8px;">94 – 98</td><td style="border:1px solid #ccc;padding:5px 8px;">78 – 82</td><td style="border:1px solid #ccc;padding:5px 8px;">103 – 107</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">42 (G)</td><td style="border:1px solid #ccc;padding:5px 8px;">98 – 102</td><td style="border:1px solid #ccc;padding:5px 8px;">82 – 84</td><td style="border:1px solid #ccc;padding:5px 8px;">107 – 111</td></tr><tr><td style="border:1px solid #ccc;padding:5px 8px;">44 (GG)</td><td style="border:1px solid #ccc;padding:5px 8px;">102 – 106</td><td style="border:1px solid #ccc;padding:5px 8px;">84 – 88</td><td style="border:1px solid #ccc;padding:5px 8px;">111 – 115</td></tr></tbody></table>`;
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
 A marca veste uma mulher madura (45-55 anos), segura do próprio corpo. Ela sai à noite — jantar, bar, cinema, aniversário. Gosta de marcar a silhueta sem ser vulgar. Valoriza clavícula à mostra, decote na medida.
@@ -90,6 +90,9 @@ export default function GeradorDescricao() {
   const [emotionalText, setEmotionalText] = useState("");
   const [technicalText, setTechnicalText] = useState("");
   const [compositionText, setCompositionText] = useState("");
+
+  const [modelSize, setModelSize] = useState("P");
+  const [editingModelSize, setEditingModelSize] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -236,7 +239,7 @@ export default function GeradorDescricao() {
 
     parts.push('<p><br></p>');
 
-    parts.push('<p><em>Modelo veste P</em></p>');
+    parts.push(`<p><em>Modelo veste ${modelSize}</em></p>`);
 
     const htmlContent = parts.join('');
 
@@ -273,7 +276,7 @@ export default function GeradorDescricao() {
     setLining(""); setLiningComposition(""); setLiningCompositionCustom("");
     setExtraNotes(""); setComposition(""); setCompositionCustom("");
     setPieceType("full"); setEmotionalText(""); setTechnicalText("");
-    setCompositionText(""); setEditingField(null);
+    setCompositionText(""); setEditingField(null); setModelSize("P"); setEditingModelSize(false);
   };
 
   const hasResult = emotionalText || technicalText;
@@ -340,7 +343,8 @@ export default function GeradorDescricao() {
       fontFamily: "'Montserrat', sans-serif",
     }}>
       <style>{`
-        * { box-sizing: border-box; }
+        html, body { font-family: 'Montserrat', sans-serif; }
+        * { box-sizing: border-box; font-family: inherit; }
         .tool-label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 6px; display: block; }
         .tool-input { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
         .tool-input:focus { border-color: #2C2825; }
@@ -359,8 +363,9 @@ export default function GeradorDescricao() {
         .pill { padding: 7px 16px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
         .pill:hover { border-color: #2C2825; color: #2C2825; }
         .pill.active { background: #2C2825; border-color: #2C2825; color: white; }
-        .size-table { border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; font-size: 12px; }
-        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 6px 10px; text-align: left; }
+        .size-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .size-table { border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; font-size: 11px; white-space: nowrap; }
+        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 4px 8px; text-align: left; }
         .size-table thead tr { background: #F5F4F2; }
         .size-table td { color: #2C2825; }
         .size-table th { color: #8A8580; font-weight: 500; letter-spacing: 0.5px; }
@@ -521,25 +526,54 @@ export default function GeradorDescricao() {
                   Guia de Medidas
                 </div>
                 <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3 }}>
-                  <table className="size-table">
-                    <thead>
-                      <tr>
-                        <th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr><td>36 (PP)</td><td>86 – 90</td><td>70 – 74</td><td>95 – 99</td></tr>
-                      <tr><td>38 (P)</td><td>90 – 94</td><td>74 – 78</td><td>99 – 103</td></tr>
-                      <tr><td>40 (M)</td><td>94 – 98</td><td>78 – 82</td><td>103 – 107</td></tr>
-                      <tr><td>42 (G)</td><td>98 – 102</td><td>82 – 84</td><td>107 – 111</td></tr>
-                      <tr><td>44 (GG)</td><td>102 – 106</td><td>84 – 88</td><td>111 – 115</td></tr>
-                    </tbody>
-                  </table>
+                  <div className="size-table-wrap">
+                    <table className="size-table">
+                      <thead>
+                        <tr>
+                          <th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>36 (PP)</td><td>86 – 90</td><td>70 – 74</td><td>95 – 99</td></tr>
+                        <tr><td>38 (P)</td><td>90 – 94</td><td>74 – 78</td><td>99 – 103</td></tr>
+                        <tr><td>40 (M)</td><td>94 – 98</td><td>78 – 82</td><td>103 – 107</td></tr>
+                        <tr><td>42 (G)</td><td>98 – 102</td><td>82 – 84</td><td>107 – 111</td></tr>
+                        <tr><td>44 (GG)</td><td>102 – 106</td><td>84 – 88</td><td>111 – 115</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ padding: "8px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", color: "#8A8580", fontStyle: "italic" }}>
-                Modelo veste P
+              <div style={{ marginBottom: 4 }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
+                  Tamanho do modelo
+                </div>
+                {editingModelSize ? (
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <input
+                      style={{ padding: "6px 10px", border: "1px solid #2C2825", borderRadius: 3, fontFamily: "'Montserrat', sans-serif", fontSize: 13, color: "#2C2825", width: 80, outline: "none" }}
+                      value={modelSize}
+                      onChange={e => setModelSize(e.target.value)}
+                      autoFocus
+                      onKeyDown={e => { if (e.key === "Enter") setEditingModelSize(false); }}
+                    />
+                    <button onClick={() => setEditingModelSize(false)}
+                      style={{ padding: "6px 12px", background: "#2C2825", color: "white", border: "none", borderRadius: 3, fontFamily: "'Montserrat', sans-serif", fontSize: 11, cursor: "pointer" }}>
+                      OK
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setEditingModelSize(true)}
+                    style={{ padding: "8px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 13, fontFamily: "'Montserrat', sans-serif", color: "#8A8580", fontStyle: "italic", cursor: "pointer", border: "1px solid transparent", transition: "border-color 0.2s", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = "#E0DCD8"}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
+                  >
+                    <span>Modelo veste {modelSize}</span>
+                    <span style={{ fontSize: 10, color: "#B0ABA6" }}>✎</span>
+                  </div>
+                )}
               </div>
             </div>
 
