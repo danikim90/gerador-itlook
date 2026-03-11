@@ -357,11 +357,11 @@ export default function GeradorDescricao() {
         .pill:hover { border-color: #2C2825; color: #2C2825; }
         .pill.active { background: #2C2825; border-color: #2C2825; color: white; }
         .main-grid { display: grid; gap: 28px; }
-        .size-table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 4px 6px; text-align: left; word-break: break-word; }
+        .size-table { border-collapse: collapse; width: 100%; max-width: 280px; table-layout: fixed; }
+        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 3px 6px; text-align: left; font-size: 12px; line-height: 1.4; }
         .size-table thead tr { background: #F5F4F2; }
         .size-table td { color: #2C2825; }
-        .size-table th { color: #8A8580; font-weight: 500; font-size: 10px; letter-spacing: 0.4px; }
+        .size-table th { color: #8A8580; font-weight: 500; }
       `}</style>
 
       <div style={{ borderBottom: "1px solid #E0DCD8", padding: "20px 0", textAlign: "center", background: "white" }}>
@@ -511,7 +511,7 @@ export default function GeradorDescricao() {
 
               <div style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
-                <div style={{ padding: "8px 10px", background: "#FAFAF8", borderRadius: 3 }}>
+                <div style={{ padding: "6px 8px", background: "#FAFAF8", borderRadius: 3 }}>
                   <table className="size-table">
                     <colgroup>
                       <col style={{ width: "30%" }} />
