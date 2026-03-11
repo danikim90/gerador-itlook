@@ -59,7 +59,7 @@ Responda EXATAMENTE neste formato:
 (2-3 frases médias, elegantes e scannables)
 
 [TECNICO]
-(Uma frase: tipo da peça + tecido/padrão + detalhes de modelagem visíveis + informação de forro)
+(Uma frase com os atributos separados por vírgula: tipo da peça, tecido/padrão, detalhes de modelagem visíveis, informação de forro)
 
 [COMPOSICAO]
 (liste os materiais separados por " | ", ex: "87% Viscose | 13% Poliamida". Sem texto adicional, sem frases introdutórias. Se não informada, escreva "Verificar composição")`;
@@ -181,8 +181,10 @@ export default function GeradorDescricao() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erro ${response.status}`);
+        const raw = await response.text();
+        let msg = `Erro ${response.status}`;
+        try { msg = JSON.parse(raw).error || msg; } catch (_) { msg = raw.slice(0, 120) || msg; }
+        throw new Error(msg);
       }
 
       const data = await response.json();
@@ -297,7 +299,7 @@ export default function GeradorDescricao() {
               style={{
                 width: "100%", minHeight: 80, padding: 12,
                 border: "1px solid #2C2825", borderRadius: 3,
-                fontFamily: "'Montserrat', sans-serif", fontSize: 14,
+                fontFamily: "'Montserrat', sans-serif", fontSize: 12,
                 lineHeight: 1.7, color: "#2C2825", resize: "vertical",
                 outline: "none", background: "#FFFEF9",
               }}
@@ -319,7 +321,7 @@ export default function GeradorDescricao() {
             onClick={() => setEditingField(fieldKey)}
             style={{
               padding: "10px 14px", background: "#FAFAF8", borderRadius: 3,
-              cursor: "pointer", fontSize: 14, fontFamily: "'Montserrat', sans-serif",
+              cursor: "pointer", fontSize: 12, fontFamily: "'Montserrat', sans-serif",
               lineHeight: 1.7, color: "#2C2825", border: "1px solid transparent",
               transition: "border-color 0.2s",
             }}
@@ -345,13 +347,13 @@ export default function GeradorDescricao() {
       <style>{`
         html, body { font-family: 'Montserrat', sans-serif; }
         * { box-sizing: border-box; font-family: inherit; }
-        .tool-label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 6px; display: block; }
-        .tool-input { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
+        .tool-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 5px; display: block; }
+        .tool-input { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
         .tool-input:focus { border-color: #2C2825; }
         .tool-input::placeholder { color: #C4BFB9; }
-        .tool-select { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+        .tool-select { width: 100%; padding: 8px 12px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .tool-select:focus { border-color: #2C2825; }
-        .btn-main { width: 100%; padding: 14px; background: #2C2825; color: white; border: none; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .btn-main { width: 100%; padding: 11px; background: #2C2825; color: white; border: none; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
         .btn-main:hover { background: #1a1715; }
         .btn-main:disabled { background: #C4BFB9; cursor: not-allowed; }
         .loading-dots::after { content: ''; animation: dots 1.5s steps(4) infinite; }
@@ -360,7 +362,7 @@ export default function GeradorDescricao() {
         .drop-zone { border: 2px dashed #D5D0CB; border-radius: 4px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
         .drop-zone:hover, .drop-zone.active { border-color: #2C2825; background: #F5F4F2; }
         .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .pill { padding: 7px 16px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
+        .pill { padding: 5px 13px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 11px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
         .pill:hover { border-color: #2C2825; color: #2C2825; }
         .pill.active { background: #2C2825; border-color: #2C2825; color: white; }
         .size-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -373,7 +375,7 @@ export default function GeradorDescricao() {
 
       <div style={{ borderBottom: "1px solid #E0DCD8", padding: "20px 0", textAlign: "center", background: "white" }}>
         <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>IT LOOK</div>
-        <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 300, color: "#2C2825", margin: 0 }}>Descrição de Produto</h1>
+        <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 17, fontWeight: 300, color: "#2C2825", margin: 0 }}>Descrição de Produto</h1>
       </div>
 
       <div style={{
@@ -505,7 +507,7 @@ export default function GeradorDescricao() {
                 <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
                   Composição
                 </div>
-                <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, fontSize: 12, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
                   <strong>Composição:</strong><br />{compositionText}
                 </div>
               </div>
@@ -515,7 +517,7 @@ export default function GeradorDescricao() {
                   <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
                     Forro
                   </div>
-                  <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                  <div style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, fontSize: 12, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
                     <strong>Forro:</strong><br />{capitalizeMaterial(getLiningComposition())}
                   </div>
                 </div>
