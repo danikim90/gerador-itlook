@@ -33,17 +33,8 @@ const PIECE_TYPES = [
   { value: "full", label: "Peça inteira" },
 ];
 
-const SIZE_GUIDES = {
-  top: `38 (P) – Busto 90-94 | Cintura 74-78
-40 (M) – Busto 94-98 | Cintura 78-82
-42 (G) – Busto 98-102 | Cintura 82-86`,
-  bottom: `38 (P) – Cintura 74-78 | Quadril 99-103
-40 (M) – Cintura 78-82 | Quadril 103-107
-42 (G) – Cintura 82-86 | Quadril 107-111`,
-  full: `38 (P) – Busto 90-94 | Cintura 74-78 | Quadril 99-103
-40 (M) – Busto 94-98 | Cintura 78-82 | Quadril 103-107
-42 (G) – Busto 98-102 | Cintura 82-86 | Quadril 107-111`,
-};
+// Tabela de medidas fixa — mesmas para todos os produtos
+const SIZE_GUIDE_HTML = `<table style="border-collapse:collapse;width:100%;font-family:'Montserrat',sans-serif;font-size:13px;"><thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Tamanho</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Busto</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Cintura</th><th style="border:1px solid #ccc;padding:8px 12px;text-align:left;">Quadril</th></tr></thead><tbody><tr><td style="border:1px solid #ccc;padding:8px 12px;">36 (PP)</td><td style="border:1px solid #ccc;padding:8px 12px;">86 – 90</td><td style="border:1px solid #ccc;padding:8px 12px;">70 – 74</td><td style="border:1px solid #ccc;padding:8px 12px;">95 – 99</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">38 (P)</td><td style="border:1px solid #ccc;padding:8px 12px;">90 – 94</td><td style="border:1px solid #ccc;padding:8px 12px;">74 – 78</td><td style="border:1px solid #ccc;padding:8px 12px;">99 – 103</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">40 (M)</td><td style="border:1px solid #ccc;padding:8px 12px;">94 – 98</td><td style="border:1px solid #ccc;padding:8px 12px;">78 – 82</td><td style="border:1px solid #ccc;padding:8px 12px;">103 – 107</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">42 (G)</td><td style="border:1px solid #ccc;padding:8px 12px;">98 – 102</td><td style="border:1px solid #ccc;padding:8px 12px;">82 – 84</td><td style="border:1px solid #ccc;padding:8px 12px;">107 – 111</td></tr><tr><td style="border:1px solid #ccc;padding:8px 12px;">44 (GG)</td><td style="border:1px solid #ccc;padding:8px 12px;">102 – 106</td><td style="border:1px solid #ccc;padding:8px 12px;">84 – 88</td><td style="border:1px solid #ccc;padding:8px 12px;">111 – 115</td></tr></tbody></table>`;
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
 A marca veste uma mulher madura (45-55 anos), segura do próprio corpo. Ela sai à noite — jantar, bar, cinema, aniversário. Gosta de marcar a silhueta sem ser vulgar. Valoriza clavícula à mostra, decote na medida.
@@ -71,7 +62,7 @@ Responda EXATAMENTE neste formato:
 (Uma frase: tipo da peça + tecido/padrão + detalhes de modelagem visíveis + informação de forro)
 
 [COMPOSICAO]
-(composição do tecido com primeira letra MAIÚSCULA em cada material, ex: "85% Poliéster, 11% Viscose, 4% Elastano". Se não informada, escreva "Verificar composição")`;
+(liste os materiais separados por " | ", ex: "87% Viscose | 13% Poliamida". Sem texto adicional, sem frases introdutórias. Se não informada, escreva "Verificar composição")`;
 
 const capitalizeMaterial = (text) => {
   const materials = ['poliéster', 'viscose', 'elastano', 'algodão', 'linho', 'poliamida', 'seda', 'tencel', 'rayon'];
@@ -109,12 +100,12 @@ export default function GeradorDescricao() {
 
   const handleFile = useCallback((file) => {
     if (!file || !file.type.startsWith("image/")) return;
-    
+
     if (image) URL.revokeObjectURL(image);
-    
+
     const newImageUrl = URL.createObjectURL(file);
     setImage(newImageUrl);
-    
+
     const reader = new FileReader();
     reader.onload = () => {
       setImageData({ base64: reader.result.split(",")[1], mediaType: file.type });
@@ -177,7 +168,6 @@ export default function GeradorDescricao() {
 
       content.push({ type: "text", text: prompt });
 
-      // Chama a API backend em vez da Anthropic diretamente
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -201,11 +191,11 @@ export default function GeradorDescricao() {
 
       setEmotionalText(emMatch ? emMatch[1].trim() : "");
       setTechnicalText(tcMatch ? tcMatch[1].trim() : "");
-      
+
       let finalComposition = cpMatch ? cpMatch[1].trim() : getComposition() || "";
       finalComposition = capitalizeMaterial(finalComposition);
       setCompositionText(finalComposition);
-      
+
       setEditingField(null);
     } catch (err) {
       console.error(err);
@@ -216,55 +206,52 @@ export default function GeradorDescricao() {
     setLoading(false);
   };
 
-  const sizeGuide = SIZE_GUIDES[pieceType];
-
   const copyToClipboard = () => {
     const parts = [];
-    
+
     if (emotionalText) {
       parts.push(`<p>${emotionalText}</p>`);
     }
-    
+
     parts.push('<p><br></p>');
-    
+
     if (technicalText) {
       parts.push(`<p>${technicalText}</p>`);
     }
-    
+
     parts.push('<p><br></p>');
-    
+
     if (compositionText) {
-      parts.push(`<p><strong>Composição:</strong> ${compositionText}</p>`);
+      parts.push(`<p><strong>Composição:</strong><br>${compositionText}</p>`);
     }
-    
+
     const liningComp = getLiningComposition();
     if (lining === "Com forro" && liningComp) {
-      parts.push(`<p><strong>Forro:</strong> ${capitalizeMaterial(liningComp)}</p>`);
+      parts.push(`<p><strong>Forro:</strong><br>${capitalizeMaterial(liningComp)}</p>`);
     }
-    
+
     parts.push('<p><br></p>');
-    
-    const guideLines = sizeGuide.split("\n").map(line => line.trim()).join('<br>');
-    parts.push(`<p><strong>Guia de Medidas:</strong><br>${guideLines}</p>`);
-    
+
+    parts.push(`<p><strong>Guia de Medidas</strong> (medidas do corpo em cm):</p>${SIZE_GUIDE_HTML}`);
+
     parts.push('<p><br></p>');
-    
+
     parts.push('<p><em>Modelo veste P</em></p>');
-    
+
     const htmlContent = parts.join('');
-    
+
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
     tempDiv.style.position = 'fixed';
     tempDiv.style.left = '-9999px';
     document.body.appendChild(tempDiv);
-    
+
     const range = document.createRange();
     range.selectNodeContents(tempDiv);
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    
+
     try {
       const successful = document.execCommand('copy');
       if (successful) {
@@ -275,7 +262,7 @@ export default function GeradorDescricao() {
       console.error('Erro ao copiar:', err);
       alert('Erro ao copiar. Tente selecionar e copiar manualmente.');
     }
-    
+
     selection.removeAllRanges();
     document.body.removeChild(tempDiv);
   };
@@ -297,7 +284,7 @@ export default function GeradorDescricao() {
     return (
       <div style={{ marginBottom: 14 }}>
         <div style={{
-          fontFamily: "'DM Sans', sans-serif", fontSize: 10,
+          fontFamily: "'Montserrat', sans-serif", fontSize: 10,
           letterSpacing: 1.2, textTransform: "uppercase",
           color: "#A8A3A0", marginBottom: 4,
         }}>{label}</div>
@@ -307,7 +294,7 @@ export default function GeradorDescricao() {
               style={{
                 width: "100%", minHeight: 80, padding: 12,
                 border: "1px solid #2C2825", borderRadius: 3,
-                fontFamily: "'DM Sans', sans-serif", fontSize: 14,
+                fontFamily: "'Montserrat', sans-serif", fontSize: 14,
                 lineHeight: 1.7, color: "#2C2825", resize: "vertical",
                 outline: "none", background: "#FFFEF9",
               }}
@@ -320,7 +307,7 @@ export default function GeradorDescricao() {
               style={{
                 marginTop: 4, padding: "4px 14px", background: "#2C2825",
                 color: "white", border: "none", borderRadius: 3,
-                fontFamily: "'DM Sans', sans-serif", fontSize: 11, cursor: "pointer",
+                fontFamily: "'Montserrat', sans-serif", fontSize: 11, cursor: "pointer",
               }}
             >OK</button>
           </div>
@@ -329,7 +316,7 @@ export default function GeradorDescricao() {
             onClick={() => setEditingField(fieldKey)}
             style={{
               padding: "10px 14px", background: "#FAFAF8", borderRadius: 3,
-              cursor: "pointer", fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+              cursor: "pointer", fontSize: 14, fontFamily: "'Montserrat', sans-serif",
               lineHeight: 1.7, color: "#2C2825", border: "1px solid transparent",
               transition: "border-color 0.2s",
             }}
@@ -339,7 +326,7 @@ export default function GeradorDescricao() {
             {value || <span style={{ color: "#C4BFB9" }}>Clique para editar</span>}
             <span style={{
               float: "right", fontSize: 10, color: "#B0ABA6",
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Montserrat', sans-serif",
             }}>✎</span>
           </div>
         )}
@@ -350,19 +337,17 @@ export default function GeradorDescricao() {
   return (
     <div style={{
       minHeight: "100vh", background: "#FAF9F7",
-      fontFamily: "'Cormorant Garamond', Georgia, serif",
+      fontFamily: "'Montserrat', sans-serif",
     }}>
-      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-
       <style>{`
         * { box-sizing: border-box; }
-        .tool-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 6px; display: block; }
-        .tool-input { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
+        .tool-label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: #8A8580; margin-bottom: 6px; display: block; }
+        .tool-input { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #2C2825; background: white; outline: none; transition: border-color 0.2s; }
         .tool-input:focus { border-color: #2C2825; }
         .tool-input::placeholder { color: #C4BFB9; }
-        .tool-select { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+        .tool-select { width: 100%; padding: 10px 14px; border: 1px solid #E0DCD8; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 14px; color: #2C2825; background: white; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8580' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
         .tool-select:focus { border-color: #2C2825; }
-        .btn-main { width: 100%; padding: 14px; background: #2C2825; color: white; border: none; border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .btn-main { width: 100%; padding: 14px; background: #2C2825; color: white; border: none; border-radius: 3px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
         .btn-main:hover { background: #1a1715; }
         .btn-main:disabled { background: #C4BFB9; cursor: not-allowed; }
         .loading-dots::after { content: ''; animation: dots 1.5s steps(4) infinite; }
@@ -371,14 +356,19 @@ export default function GeradorDescricao() {
         .drop-zone { border: 2px dashed #D5D0CB; border-radius: 4px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
         .drop-zone:hover, .drop-zone.active { border-color: #2C2825; background: #F5F4F2; }
         .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .pill { padding: 7px 16px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
+        .pill { padding: 7px 16px; border: 1px solid #E0DCD8; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #6B6560; cursor: pointer; transition: all 0.15s; user-select: none; background: white; }
         .pill:hover { border-color: #2C2825; color: #2C2825; }
         .pill.active { background: #2C2825; border-color: #2C2825; color: white; }
+        .size-table { border-collapse: collapse; width: 100%; font-family: 'Montserrat', sans-serif; font-size: 12px; }
+        .size-table th, .size-table td { border: 1px solid #E0DCD8; padding: 6px 10px; text-align: left; }
+        .size-table thead tr { background: #F5F4F2; }
+        .size-table td { color: #2C2825; }
+        .size-table th { color: #8A8580; font-weight: 500; letter-spacing: 0.5px; }
       `}</style>
 
       <div style={{ borderBottom: "1px solid #E0DCD8", padding: "20px 0", textAlign: "center", background: "white" }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>IT LOOK</div>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300, color: "#2C2825", margin: 0 }}>Descrição de Produto</h1>
+        <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>IT LOOK</div>
+        <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, fontWeight: 300, color: "#2C2825", margin: 0 }}>Descrição de Produto</h1>
       </div>
 
       <div style={{
@@ -402,7 +392,7 @@ export default function GeradorDescricao() {
                 onDragLeave={() => setDragActive(false)}
                 onDrop={onDrop}>
                 <div style={{ fontSize: 28, marginBottom: 6, color: "#C4BFB9" }}>📷</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#8A8580" }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, color: "#8A8580" }}>
                   <span style={{ color: "#2C2825", fontWeight: 500 }}>Ctrl+V</span> para colar print
                   <span style={{ margin: "0 6px", color: "#D5D0CB" }}>|</span>
                   <span style={{ textDecoration: "underline", color: "#2C2825", cursor: "pointer" }}>buscar arquivo</span>
@@ -439,7 +429,7 @@ export default function GeradorDescricao() {
           <div style={{ marginBottom: 12 }}>
             <label className="tool-label">Forro</label>
             <div className="pill-row">
-              {["Com forro", "Sem forro", "Forro parcial"].map(opt => (
+              {["Com forro", "Sem forro"].map(opt => (
                 <span key={opt} className={`pill ${lining === opt ? "active" : ""}`}
                   onClick={() => setLining(lining === opt ? "" : opt)}>{opt}</span>
               ))}
@@ -485,7 +475,7 @@ export default function GeradorDescricao() {
               : hasResult ? "Regerar" : "Gerar descrição"}
           </button>
           {!imageData && !getFabric() && (
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#A8A3A0", textAlign: "center", marginTop: 8 }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#A8A3A0", textAlign: "center", marginTop: 8 }}>
               Envie uma foto ou selecione o tecido</p>
           )}
         </div>
@@ -495,7 +485,7 @@ export default function GeradorDescricao() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <label className="tool-label" style={{ margin: 0 }}>Resultado</label>
               <button onClick={resetAll}
-                style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#A8A3A0", textDecoration: "underline" }}>
+                style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'Montserrat', sans-serif", fontSize: 11, color: "#A8A3A0", textDecoration: "underline" }}>
                 Limpar tudo</button>
             </div>
 
@@ -506,32 +496,49 @@ export default function GeradorDescricao() {
               <EditableBlock label="Ficha técnica" value={technicalText}
                 onChange={setTechnicalText} fieldKey="technical" />
 
-              <EditableBlock label="Composição" value={compositionText}
-                onChange={setCompositionText} fieldKey="composition" />
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
+                  Composição
+                </div>
+                <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                  <strong>Composição:</strong><br />{compositionText}
+                </div>
+              </div>
 
               {showLiningComposition && getLiningComposition() && (
                 <div style={{ marginBottom: 14 }}>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
                     Forro
                   </div>
-                  <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'DM Sans', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
-                    {capitalizeMaterial(getLiningComposition())}
+                  <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", lineHeight: 1.7, color: "#2C2825" }}>
+                    <strong>Forro:</strong><br />{capitalizeMaterial(getLiningComposition())}
                   </div>
                 </div>
               )}
 
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>
                   Guia de Medidas
                 </div>
-                <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 13, fontFamily: "'DM Sans', sans-serif", lineHeight: 1.9, color: "#2C2825" }}>
-                  {sizeGuide.split("\n").map((line, i) => (
-                    <span key={i}>{line}<br /></span>
-                  ))}
+                <div style={{ padding: "10px 14px", background: "#FAFAF8", borderRadius: 3 }}>
+                  <table className="size-table">
+                    <thead>
+                      <tr>
+                        <th>Tamanho</th><th>Busto</th><th>Cintura</th><th>Quadril</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>36 (PP)</td><td>86 – 90</td><td>70 – 74</td><td>95 – 99</td></tr>
+                      <tr><td>38 (P)</td><td>90 – 94</td><td>74 – 78</td><td>99 – 103</td></tr>
+                      <tr><td>40 (M)</td><td>94 – 98</td><td>78 – 82</td><td>103 – 107</td></tr>
+                      <tr><td>42 (G)</td><td>98 – 102</td><td>82 – 84</td><td>107 – 111</td></tr>
+                      <tr><td>44 (GG)</td><td>102 – 106</td><td>84 – 88</td><td>111 – 115</td></tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
-              <div style={{ padding: "8px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: "#8A8580", fontStyle: "italic" }}>
+              <div style={{ padding: "8px 14px", background: "#FAFAF8", borderRadius: 3, fontSize: 14, fontFamily: "'Montserrat', sans-serif", color: "#8A8580", fontStyle: "italic" }}>
                 Modelo veste P
               </div>
             </div>
@@ -540,7 +547,7 @@ export default function GeradorDescricao() {
               style={{ marginTop: 16, background: copied ? "#3D6B4F" : "#2C2825" }}>
               {copied ? "✓ Copiado!" : "Copiar descrição"}
             </button>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#B0ABA6", textAlign: "center", marginTop: 6 }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, color: "#B0ABA6", textAlign: "center", marginTop: 6 }}>
               Cola na Nuvemshop com negrito, itálico e quebras de linha
             </p>
           </div>
