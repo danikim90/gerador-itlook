@@ -34,7 +34,7 @@ const PIECE_TYPES = [
 ];
 
 // Guia de medidas — imagem estática (TABELAMEDIDAS.png)
-const SIZE_GUIDE_HTML = `<img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style="width:100%;max-width:500px;height:auto;display:block;margin:16px 0 0;" />`;
+const SIZE_GUIDE_HTML = `<div style="overflow-x:auto;margin:16px 0 0;"><img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style="width:100%;min-width:400px;max-width:600px;height:auto;display:block;" /></div>`;
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
 A marca veste uma mulher madura (45-55 anos), segura do próprio corpo. Ela sai à noite — jantar, bar, cinema, aniversário. Gosta de marcar a silhueta sem ser vulgar. Valoriza clavícula à mostra, decote na medida.
@@ -511,9 +511,7 @@ export default function GeradorDescricao() {
 
               <div style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
-                <div>
-                  <img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style={{ width: "100%", maxWidth: 500, height: "auto", display: "block" }} />
-                </div>
+                <div style={{overflowX:'auto',margin:'16px 0 0'}}><img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style={{width:'100%',minWidth:'400px',maxWidth:'600px',height:'auto',display:'block'}} /></div>
               </div>
 
               <div style={{ marginBottom: 4 }}>
