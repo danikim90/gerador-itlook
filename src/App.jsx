@@ -511,25 +511,8 @@ export default function GeradorDescricao() {
 
               <div style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
-                <div style={{ padding: "6px 8px", background: "#FAFAF8", borderRadius: 3 }}>
-                  <table className="size-table">
-                    <colgroup>
-                      <col style={{ width: "30%" }} />
-                      <col style={{ width: "23%" }} />
-                      <col style={{ width: "23%" }} />
-                      <col style={{ width: "24%" }} />
-                    </colgroup>
-                    <thead>
-                      <tr><th>Tam.</th><th>Busto</th><th>Cin.</th><th>Quadril</th></tr>
-                    </thead>
-                    <tbody>
-                      <tr><td>36 (PP)</td><td>86–90</td><td>70–74</td><td>95–99</td></tr>
-                      <tr><td>38 (P)</td><td>90–94</td><td>74–78</td><td>99–103</td></tr>
-                      <tr><td>40 (M)</td><td>94–98</td><td>78–82</td><td>103–107</td></tr>
-                      <tr><td>42 (G)</td><td>98–102</td><td>82–84</td><td>107–111</td></tr>
-                      <tr><td>44 (GG)</td><td>102–106</td><td>84–88</td><td>111–115</td></tr>
-                    </tbody>
-                  </table>
+                <div>
+                  <img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style={{ width: "100%", maxWidth: 500, height: "auto", display: "block" }} />
                 </div>
               </div>
 
