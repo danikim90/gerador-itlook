@@ -33,7 +33,7 @@ const PIECE_TYPES = [
   { value: "full", label: "Peça inteira" },
 ];
 
-// Tabela de medidas fixa — mesmas para todos os produtos
+// Guia de medidas — imagem estática (TABELAMEDIDAS.png)
 const SIZE_GUIDE_HTML = `<img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style="width:100%;max-width:500px;height:auto;display:block;margin:16px 0 0;" />`;
 
 const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
