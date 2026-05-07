@@ -1,10 +1,16 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
 const FABRICS = [
-  "Malha encorpada", "Viscose", "Linho", "Crepe", "Crepe Alfaiataria",
-  "Chiffon", "Tule", "Seda", "Algodão", "Tencel", "Viscolinho",
-  "Malha canelada", "Milano", "Jacquard", "Tricoline", "Cetim",
-  "Dobby", "Musseline", "Rayon", "Egito",
+  "Alfaiataria",
+  "Alfaiataria encorpada",
+  "Linho com elastano",
+  "Malha canelada",
+  "Malha crepe encorpada",
+  "Malha de poliamida",
+  "Malha encorpada",
+  "Tecido acetinado",
+  "Tricoline",
+  "Tule",
 ];
 
 const COMPOSITIONS = [
@@ -36,30 +42,17 @@ const PIECE_TYPES = [
 // Guia de medidas — imagem estática (TABELAMEDIDAS.png)
 const SIZE_GUIDE_HTML = `<div style="overflow-x:auto;margin:16px 0 0;"><img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style="width:100%;min-width:400px;max-width:600px;height:auto;display:block;" /></div>`;
 
-const BRAND_VOICE = `Você é a copywriter da IT LOOK, marca de moda feminina brasileira.
-A marca veste uma mulher madura (45-55 anos), segura do próprio corpo. Ela sai à noite — jantar, bar, cinema, aniversário. Gosta de marcar a silhueta sem ser vulgar. Valoriza clavícula à mostra, decote na medida.
-
-TOM DE VOZ: Elegante mas scannable. Informação útil com sofisticação, mas sem enrolação. Fale de OCASIÃO DE USO + COMO FUNCIONA NO CORPO + SUGESTÃO DE LOOK. Seja direta como uma consultora de estilo experiente.
-
-ESTRUTURA DO PARÁGRAFO (2-3 frases médias):
-1ª frase: O que é a peça + ocasião de uso concreta (jantar, bar, happy hour, aniversário, cinema, encontro)
-2ª frase: Como ela funciona no corpo/estilo OU detalhe que faz diferença (abotoamento, decote, comprimento)
-3ª frase: Sugestão de combinação prática (com que peças usar, em que contexto)
-
-REGRAS:
-- Máximo 2-3 frases de tamanho médio
-- Seja específica: "jantar de sexta" é melhor que "ocasiões especiais"
-- Fale de controle/versatilidade quando aplicável (ex: "abotoamento te dá controle sobre quanto mostrar")
-- NUNCA use: "perfeita para", "não pode faltar", "peça-chave", "versátil", "atemporal", "essencial", "indispensável", "guarda-roupa"
-- NUNCA seja poética ou use metáforas floridas
+const BRAND_VOICE = `Você é especialista em fichas técnicas de moda da IT LOOK, marca de moda feminina brasileira.
 
 Responda EXATAMENTE neste formato:
 
-[EMOCIONAL]
-(2-3 frases médias, elegantes e scannables)
-
 [TECNICO]
-(Uma frase com os atributos separados por vírgula: tipo da peça, tecido/padrão, detalhes de modelagem visíveis, informação de forro)
+* (tecido principal e toque/caimento)
+* (modelagem: comprimento, silhueta, caimento no corpo)
+* (detalhes visíveis: decote, abertura, fenda, bolsos, estampa, manga)
+* (fechamento: zíper, botões, amarração — se houver)
+* (forro: com ou sem forro)
+Mínimo 5 tópicos, máximo 7. Cada bullet = um atributo objetivo. Sem texto corrido, sem frases introdutórias.
 
 [COMPOSICAO]
 (liste os materiais separados por " | ", ex: "87% Viscose | 13% Poliamida". Sem texto adicional, sem frases introdutórias. Se não informada, escreva "Verificar composição")`;
@@ -223,8 +216,15 @@ export default function GeradorDescricao() {
   const copyToClipboard = () => {
     const parts = [];
 
-    if (emotionalText) parts.push(p(emotionalText));
-    if (technicalText) parts.push(p(technicalText));
+    if (technicalText) {
+      const bullets = technicalText.split('\n').map(l => l.trim()).filter(l => l.startsWith('* ')).map(l => l.slice(2));
+      if (bullets.length > 0) {
+        const liItems = bullets.map(b => `<li style="margin-bottom:4px">${b}</li>`).join('');
+        parts.push(`<p style="margin:0 0 4px 0"><strong>Detalhes do produto:</strong></p><ul style="margin:0 0 8px 0;padding-left:20px">${liItems}</ul>`);
+      } else {
+        parts.push(p(technicalText));
+      }
+    }
     if (compositionText) parts.push(p(`<strong>Composição:</strong> ${compositionText}`));
 
     const liningComp = getLiningComposition();
@@ -277,8 +277,27 @@ export default function GeradorDescricao() {
   const hasResult = emotionalText || technicalText;
   const showLiningComposition = lining === "Com forro";
 
-  const EditableBlock = ({ label, value, onChange, fieldKey }) => {
+  const EditableBlock = ({ label, value, onChange, fieldKey, bulletList, bulletTitle }) => {
     const isEditing = editingField === fieldKey;
+
+    const renderValue = () => {
+      if (!value) return <span style={{ color: "#C4BFB9" }}>Clique para editar</span>;
+      if (bulletList) {
+        const bullets = value.split('\n').map(l => l.trim()).filter(l => l.startsWith('* ')).map(l => l.slice(2));
+        if (bullets.length > 0) {
+          return (
+            <>
+              {bulletTitle && <strong style={{ display: "block", marginBottom: 6 }}>{bulletTitle}</strong>}
+              <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.8 }}>
+                {bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </>
+          );
+        }
+      }
+      return value;
+    };
+
     return (
       <div style={{ marginBottom: 14 }}>
         <div style={{
@@ -319,7 +338,7 @@ export default function GeradorDescricao() {
             onMouseEnter={e => e.currentTarget.style.borderColor = "#E0DCD8"}
             onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
           >
-            {value || <span style={{ color: "#C4BFB9" }}>Clique para editar</span>}
+            {renderValue()}
             <span style={{
               float: "right", fontSize: 10, color: "#B0ABA6",
               fontFamily: "'Montserrat', sans-serif",
@@ -487,11 +506,9 @@ export default function GeradorDescricao() {
             </div>
 
             <div style={{ background: "white", border: "1px solid #E0DCD8", borderRadius: 4, padding: 20 }}>
-              <EditableBlock label="Texto" value={emotionalText}
-                onChange={setEmotionalText} fieldKey="emotional" />
-
               <EditableBlock label="Ficha técnica" value={technicalText}
-                onChange={setTechnicalText} fieldKey="technical" />
+                onChange={setTechnicalText} fieldKey="technical" bulletList={true}
+                bulletTitle="Detalhes do produto:" />
 
               <div style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Composição</div>
