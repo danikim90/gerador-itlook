@@ -39,9 +39,6 @@ const PIECE_TYPES = [
   { value: "full", label: "Peça inteira" },
 ];
 
-// Guia de medidas — imagem estática (TABELAMEDIDAS.png)
-const SIZE_GUIDE_HTML = `<div style="overflow-x:auto;margin:16px 0 0;"><img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style="width:100%;min-width:400px;max-width:600px;height:auto;display:block;" /></div>`;
-
 const BRAND_VOICE = `Você é especialista em fichas técnicas de moda da IT LOOK, marca de moda feminina brasileira.
 
 Responda EXATAMENTE neste formato:
@@ -84,8 +81,6 @@ export default function GeradorDescricao() {
   const [technicalText, setTechnicalText] = useState("");
   const [compositionText, setCompositionText] = useState("");
 
-  const [modelSize, setModelSize] = useState("P");
-  const [editingModelSize, setEditingModelSize] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 640);
 
   useEffect(() => {
@@ -232,10 +227,6 @@ export default function GeradorDescricao() {
       parts.push(p(`<strong>Forro:</strong> ${capitalizeMaterial(liningComp)}`));
     }
 
-    parts.push(p(`<strong>Guia de Medidas</strong> (medidas do corpo em cm):`));
-    parts.push(SIZE_GUIDE_HTML);
-    parts.push(p(`<em>Modelo veste ${modelSize}</em>`));
-
     const htmlContent = parts.join('');
 
     const tempDiv = document.createElement('div');
@@ -271,7 +262,7 @@ export default function GeradorDescricao() {
     setLining(""); setLiningComposition(""); setLiningCompositionCustom("");
     setExtraNotes(""); setComposition(""); setCompositionCustom("");
     setPieceType("full"); setEmotionalText(""); setTechnicalText("");
-    setCompositionText(""); setEditingField(null); setModelSize("P"); setEditingModelSize(false);
+    setCompositionText(""); setEditingField(null);
   };
 
   const hasResult = emotionalText || technicalText;
@@ -526,39 +517,6 @@ export default function GeradorDescricao() {
                 </div>
               )}
 
-              <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Guia de Medidas</div>
-                <div style={{overflowX:'auto',margin:'16px 0 0'}}><img src="/TABELAMEDIDAS.png" alt="Guia de Medidas IT Look" style={{width:'100%',minWidth:'400px',maxWidth:'600px',height:'auto',display:'block'}} /></div>
-              </div>
-
-              <div style={{ marginBottom: 4 }}>
-                <div style={{ fontSize: 10, letterSpacing: 1.2, textTransform: "uppercase", color: "#A8A3A0", marginBottom: 4 }}>Tamanho do modelo</div>
-                {editingModelSize ? (
-                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                    <input
-                      style={{ padding: "6px 10px", border: "1px solid #2C2825", borderRadius: 3, color: "#2C2825", width: 80, outline: "none" }}
-                      value={modelSize}
-                      onChange={e => setModelSize(e.target.value)}
-                      autoFocus
-                      onKeyDown={e => { if (e.key === "Enter") setEditingModelSize(false); }}
-                    />
-                    <button onClick={() => setEditingModelSize(false)}
-                      style={{ padding: "6px 12px", background: "#2C2825", color: "white", border: "none", borderRadius: 3, cursor: "pointer" }}>
-                      OK
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => setEditingModelSize(true)}
-                    style={{ padding: "8px 12px", background: "#FAFAF8", borderRadius: 3, color: "#8A8580", fontStyle: "italic", cursor: "pointer", border: "1px solid transparent", transition: "border-color 0.2s", display: "flex", justifyContent: "space-between", alignItems: "center" }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = "#E0DCD8"}
-                    onMouseLeave={e => e.currentTarget.style.borderColor = "transparent"}
-                  >
-                    <span>Modelo veste {modelSize}</span>
-                    <span style={{ fontSize: 10, color: "#B0ABA6" }}>✎</span>
-                  </div>
-                )}
-              </div>
             </div>
 
             <button className="btn-main" onClick={copyToClipboard}
